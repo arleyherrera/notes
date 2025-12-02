@@ -1,8 +1,14 @@
-import { useState } from 'react'
+import { useState, MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Star, Pencil } from 'lucide-react'
+import { Nota } from '../../types'
 
-function NoteCard({ nota, onActualizar }) {
+interface NoteCardProps {
+  nota: Nota
+  onActualizar: (id: string, cambios: Partial<Nota>) => void
+}
+
+function NoteCard({ nota, onActualizar }: NoteCardProps) {
   const [texto, setTexto] = useState(nota.contenido)
   const [hover, setHover] = useState(false)
 
@@ -12,15 +18,14 @@ function NoteCard({ nota, onActualizar }) {
     }
   }
 
-  const toggleImportante = (e) => {
+  const toggleImportante = (e: MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
     onActualizar(nota.id, { importante: !nota.importante })
   }
 
-  // Formatear fecha como en la imagen
-  const formatearFecha = (fecha) => {
-    const opciones = { month: 'short', day: 'numeric', year: 'numeric' }
+  const formatearFecha = (fecha: string) => {
+    const opciones: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
     return new Date(fecha).toLocaleDateString('en-US', opciones)
   }
 
@@ -30,7 +35,6 @@ function NoteCard({ nota, onActualizar }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {/* Estrella arriba a la derecha - solo si es importante */}
       {nota.importante && (
         <button
           onClick={toggleImportante}
@@ -40,7 +44,6 @@ function NoteCard({ nota, onActualizar }) {
         </button>
       )}
 
-      {/* Contenido */}
       <textarea
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
@@ -50,13 +53,11 @@ function NoteCard({ nota, onActualizar }) {
         style={{ minHeight: '100px' }}
       />
 
-      {/* Footer con fecha y boton editar */}
       <div className="flex justify-between items-end mt-2">
         <span className="text-sm text-gray-600">
           {formatearFecha(nota.updatedAt)}
         </span>
 
-        {/* Boton editar - siempre visible en hover */}
         {hover && (
           <Link
             to={`/notes/${nota.id}`}
@@ -67,7 +68,6 @@ function NoteCard({ nota, onActualizar }) {
         )}
       </div>
 
-      {/* Boton para marcar importante (oculto, solo en hover si no es importante) */}
       {hover && !nota.importante && (
         <button
           onClick={toggleImportante}

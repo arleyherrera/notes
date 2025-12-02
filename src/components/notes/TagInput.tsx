@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import { useState, KeyboardEvent } from 'react'
 import { X } from 'lucide-react'
 
-function TagInput({ tags, onChange }) {
+interface TagInputProps {
+  tags: string[]
+  onChange: (tags: string[]) => void
+}
+
+function TagInput({ tags, onChange }: TagInputProps) {
   const [input, setInput] = useState('')
 
-  const agregarTag = (e) => {
+  const agregarTag = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
       e.preventDefault()
 
@@ -15,7 +20,7 @@ function TagInput({ tags, onChange }) {
     }
   }
 
-  const eliminarTag = (tagAEliminar) => {
+  const eliminarTag = (tagAEliminar: string) => {
     onChange(tags.filter(tag => tag !== tagAEliminar))
   }
 

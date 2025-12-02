@@ -1,4 +1,13 @@
-function InputField({ label, icono: Icono, children }) {
+import { LucideIcon } from 'lucide-react'
+import { ReactNode } from 'react'
+
+interface InputFieldProps {
+  label?: string
+  icono: LucideIcon
+  children: ReactNode
+}
+
+function InputField({ label, icono: Icono, children }: InputFieldProps) {
   return (
     <div>
       {label && <label className="block text-sm text-gray-500 mb-2">{label}</label>}

@@ -1,4 +1,13 @@
-function Toggle({ activo, onChange, icono: Icono, texto }) {
+import { LucideIcon } from 'lucide-react'
+
+interface ToggleProps {
+  activo: boolean
+  onChange: () => void
+  icono: LucideIcon
+  texto: string
+}
+
+function Toggle({ activo, onChange, icono: Icono, texto }: ToggleProps) {
   return (
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
       <div className="flex items-center gap-3">

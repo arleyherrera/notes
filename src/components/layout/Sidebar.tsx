@@ -2,13 +2,17 @@ import { useState, useEffect, useRef } from 'react'
 import { Plus } from 'lucide-react'
 import { ColorPicker } from '../common'
 
-function Sidebar({ onNuevaNota }) {
+interface SidebarProps {
+  onNuevaNota: (color: string) => void
+}
+
+function Sidebar({ onNuevaNota }: SidebarProps) {
   const [mostrarColores, setMostrarColores] = useState(false)
-  const pickerRef = useRef(null)
+  const pickerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickFuera = (e) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target)) {
+    const handleClickFuera = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
         setMostrarColores(false)
       }
     }
@@ -22,7 +26,7 @@ function Sidebar({ onNuevaNota }) {
     }
   }, [mostrarColores])
 
-  const crearNota = (color) => {
+  const crearNota = (color: string) => {
     onNuevaNota(color)
     setMostrarColores(false)
   }

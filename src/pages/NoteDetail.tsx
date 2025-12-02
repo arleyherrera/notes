@@ -3,14 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { MoreHorizontal, Tag, Archive, Folder, Star, Calendar } from 'lucide-react'
 import { SidebarEdit } from '../components/layout'
 import { Toggle, InputField } from '../components/common'
-import useNotes from '../hooks/useNotes.jsx'
+import useNotes from '../hooks/useNotes'
 
 function NoteDetail() {
-  const { id } = useParams()
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { cargando, obtenerNota, actualizarNota, eliminarNota } = useNotes()
+  const { obtenerNota, actualizarNota, eliminarNota } = useNotes()
 
-  const nota = !cargando ? obtenerNota(id) : null
+  const nota = obtenerNota(id || '')
 
   const [contenido, setContenido] = useState('')
   const [categoria, setCategoria] = useState('')
@@ -20,7 +20,6 @@ function NoteDetail() {
   const [mostrarMenu, setMostrarMenu] = useState(false)
   const [inicializado, setInicializado] = useState(false)
 
-  // Inicializar formulario cuando la nota carga
   if (nota && !inicializado) {
     setContenido(nota.contenido)
     setCategoria(nota.categoria || '')
@@ -31,25 +30,23 @@ function NoteDetail() {
   }
 
   const guardarCambios = () => {
+    if (!id) return
     const tagsArray = tagsInput.split(',').map(t => t.trim()).filter(t => t)
     actualizarNota(id, { contenido, categoria, tags: tagsArray, importante, archivada })
     navigate('/')
   }
 
   const borrarNota = () => {
+    if (!id) return
     if (window.confirm('¿Seguro que quieres eliminar esta nota?')) {
       eliminarNota(id)
       navigate('/')
     }
   }
 
-  const formatearFecha = (fecha) => {
+  const formatearFecha = (fecha: string) => {
     const date = new Date(fecha)
     return `${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}/${date.getFullYear()}`
-  }
-
-  if (cargando) {
-    return <div className="flex items-center justify-center h-screen"><p className="text-gray-500">Cargando...</p></div>
   }
 
   if (!nota) {
@@ -68,7 +65,6 @@ function NoteDetail() {
       <SidebarEdit />
 
       <div className="flex-1 p-8">
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold text-gray-900">Edit Note</h1>
@@ -86,7 +82,6 @@ function NoteDetail() {
           <button onClick={guardarCambios} className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium">Save</button>
         </div>
 
-        {/* Textarea */}
         <div className={`${nota.color} rounded-xl p-6 mb-8`}>
           <textarea
             value={contenido}
@@ -96,7 +91,6 @@ function NoteDetail() {
           />
         </div>
 
-        {/* Campos */}
         <div className="grid grid-cols-2 gap-6 max-w-2xl">
           <InputField label="Tags" icono={Tag}>
             <input

@@ -1,3 +1,8 @@
+interface ColorPickerProps {
+  onSeleccionar: (color: string) => void
+  vertical?: boolean
+}
+
 const colores = [
   { nombre: 'Naranja', clase: 'bg-orange-300' },
   { nombre: 'Amarillo', clase: 'bg-yellow-300' },
@@ -7,7 +12,7 @@ const colores = [
   { nombre: 'Violeta', clase: 'bg-violet-300' },
 ]
 
-function ColorPicker({ onSeleccionar, vertical }) {
+function ColorPicker({ onSeleccionar, vertical }: ColorPickerProps) {
   return (
     <div className={`${vertical ? 'flex flex-col' : 'flex'} gap-2 p-2 bg-white rounded-lg shadow-lg`}>
       {colores.map((color) => (

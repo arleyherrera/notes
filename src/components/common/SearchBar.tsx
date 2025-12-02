@@ -1,6 +1,11 @@
 import { Search } from 'lucide-react'
 
-function SearchBar({ valor, onChange }) {
+interface SearchBarProps {
+  valor: string
+  onChange: (valor: string) => void
+}
+
+function SearchBar({ valor, onChange }: SearchBarProps) {
   return (
     <div className="relative">
       <Search className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />

@@ -1,27 +1,16 @@
 import { useState, useEffect, useCallback } from 'react'
-import { guardarNotas, cargarNotas } from '../utils/storage.jsx'
+import { guardarNotas, cargarNotas } from '../utils/storage'
+import { Nota } from '../types'
 
 function useNotes() {
-  const [notas, setNotas] = useState([])
-  const [cargando, setCargando] = useState(true)
-
+  const [notas, setNotas] = useState<Nota[]>(() => cargarNotas())
 
   useEffect(() => {
-    const notasGuardadas = cargarNotas()
-    setNotas(notasGuardadas)
-    setCargando(false)
-  }, [])
+    guardarNotas(notas)
+  }, [notas])
 
-
-  useEffect(() => {
-    if (!cargando) {
-      guardarNotas(notas)
-    }
-  }, [notas, cargando])
-
-
-  const agregarNota = (color) => {
-    const nuevaNota = {
+  const agregarNota = (color: string): Nota => {
+    const nuevaNota: Nota = {
       id: Date.now().toString(),
       contenido: '',
       color: color,
@@ -36,8 +25,7 @@ function useNotes() {
     return nuevaNota
   }
 
-
-  const actualizarNota = useCallback((id, cambios) => {
+  const actualizarNota = useCallback((id: string, cambios: Partial<Nota>) => {
     setNotas(prev => prev.map(nota => {
       if (nota.id === id) {
         return {
@@ -50,19 +38,16 @@ function useNotes() {
     }))
   }, [])
 
-
-  const eliminarNota = useCallback((id) => {
+  const eliminarNota = useCallback((id: string) => {
     setNotas(prev => prev.filter(nota => nota.id !== id))
   }, [])
 
-
-  const obtenerNota = useCallback((id) => {
+  const obtenerNota = useCallback((id: string): Nota | undefined => {
     return notas.find(nota => nota.id === id)
   }, [notas])
 
   return {
     notas,
-    cargando,
     agregarNota,
     actualizarNota,
     eliminarNota,

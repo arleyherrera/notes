@@ -1,8 +1,8 @@
-// Funciones para guardar y cargar notas del localStorage
+import { Nota } from '../types'
 
 const STORAGE_KEY = 'mis-notas'
 
-export function guardarNotas(notas) {
+export function guardarNotas(notas: Nota[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notas))
   } catch (error) {
@@ -10,7 +10,7 @@ export function guardarNotas(notas) {
   }
 }
 
-export function cargarNotas() {
+export function cargarNotas(): Nota[] {
   try {
     const datos = localStorage.getItem(STORAGE_KEY)
     if (datos) {

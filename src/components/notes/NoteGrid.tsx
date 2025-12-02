@@ -1,7 +1,12 @@
 import NoteCard from './NoteCard'
+import { Nota } from '../../types'
 
-function NoteGrid({ notas, onActualizar }) {
+interface NoteGridProps {
+  notas: Nota[]
+  onActualizar: (id: string, cambios: Partial<Nota>) => void
+}
 
+function NoteGrid({ notas, onActualizar }: NoteGridProps) {
   const notasOrdenadas = [...notas].sort((a, b) => {
     if (a.fijada && !b.fijada) return -1
     if (!a.fijada && b.fijada) return 1
