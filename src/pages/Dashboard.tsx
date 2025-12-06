@@ -1,16 +1,18 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Sidebar } from '../components/layout'
 import { SearchBar } from '../components/common'
 import { NoteGrid } from '../components/notes'
-import useNotes from '../hooks/useNotes'
+import { useNotes } from '../hooks'
 
 function Dashboard() {
   const { notes, addNote, updateNote } = useNotes()
   const [search, setSearch] = useState('')
 
-  const filteredNotes = notes.filter(note => {
-    return note.content.toLowerCase().includes(search.toLowerCase())
-  })
+  // Memoize filtered notes to avoid filtering on every render
+  const filteredNotes = useMemo(() => {
+    const searchLower = search.toLowerCase()
+    return notes.filter(note => note.content.toLowerCase().includes(searchLower))
+  }, [notes, search])
 
   return (
     <div className="flex min-h-screen bg-white">

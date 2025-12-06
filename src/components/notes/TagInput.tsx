@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from 'react'
+import { useState, useCallback, KeyboardEvent, memo } from 'react'
 import { X } from 'lucide-react'
 
 interface TagInputProps {
@@ -6,10 +6,10 @@ interface TagInputProps {
   onChange: (tags: string[]) => void
 }
 
-function TagInput({ tags, onChange }: TagInputProps) {
+const TagInput = memo(function TagInput({ tags, onChange }: TagInputProps) {
   const [input, setInput] = useState('')
 
-  const addTag = (e: KeyboardEvent<HTMLInputElement>) => {
+  const addTag = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
       e.preventDefault()
 
@@ -18,11 +18,11 @@ function TagInput({ tags, onChange }: TagInputProps) {
       }
       setInput('')
     }
-  }
+  }, [input, tags, onChange])
 
-  const removeTag = (tagToRemove: string) => {
+  const removeTag = useCallback((tagToRemove: string) => {
     onChange(tags.filter(tag => tag !== tagToRemove))
-  }
+  }, [tags, onChange])
 
   return (
     <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg min-h-[42px]">
@@ -47,6 +47,6 @@ function TagInput({ tags, onChange }: TagInputProps) {
       />
     </div>
   )
-}
+})
 
 export default TagInput

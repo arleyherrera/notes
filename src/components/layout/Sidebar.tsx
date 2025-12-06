@@ -1,48 +1,40 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef, memo, useCallback } from 'react'
 import { Plus } from 'lucide-react'
 import { ColorPicker } from '../common'
+import { useClickOutside } from '../../hooks'
 
 interface SidebarProps {
   onNewNote: (color: string) => void
 }
 
-function Sidebar({ onNewNote }: SidebarProps) {
+const Sidebar = memo(function Sidebar({ onNewNote }: SidebarProps) {
   const [showColors, setShowColors] = useState(false)
   const pickerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setShowColors(false)
-      }
-    }
+  const closeColorPicker = useCallback(() => {
+    setShowColors(false)
+  }, [])
 
-    if (showColors) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
+  useClickOutside(pickerRef, showColors, closeColorPicker)
 
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [showColors])
-
-  const createNote = (color: string) => {
+  const createNote = useCallback((color: string) => {
     onNewNote(color)
     setShowColors(false)
-  }
+  }, [onNewNote])
+
+  const toggleColors = useCallback(() => {
+    setShowColors(prev => !prev)
+  }, [])
 
   return (
     <div className="w-28 bg-white min-h-screen flex flex-col items-center py-6 border-r border-gray-200">
-      {/* Logo */}
       <div className="text-sm font-semibold text-gray-700">Docket</div>
 
-      {/* Spacer */}
       <div className="mt-16" />
 
-      {/* Add button */}
       <div className="relative" ref={pickerRef}>
         <button
-          onClick={() => setShowColors(!showColors)}
+          onClick={toggleColors}
           className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors shadow-lg"
         >
           <Plus className="w-6 h-6" />
@@ -56,6 +48,6 @@ function Sidebar({ onNewNote }: SidebarProps) {
       </div>
     </div>
   )
-}
+})
 
 export default Sidebar

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Search } from 'lucide-react'
 
 interface SearchBarProps {
@@ -5,7 +6,7 @@ interface SearchBarProps {
   onChange: (value: string) => void
 }
 
-function SearchBar({ value, onChange }: SearchBarProps) {
+const SearchBar = memo(function SearchBar({ value, onChange }: SearchBarProps) {
   return (
     <div className="relative">
       <Search className="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -18,6 +19,6 @@ function SearchBar({ value, onChange }: SearchBarProps) {
       />
     </div>
   )
-}
+})
 
 export default SearchBar

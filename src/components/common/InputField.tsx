@@ -1,5 +1,5 @@
+import { memo, ReactNode } from 'react'
 import { LucideIcon } from 'lucide-react'
-import { ReactNode } from 'react'
 
 interface InputFieldProps {
   label?: string
@@ -7,7 +7,7 @@ interface InputFieldProps {
   children: ReactNode
 }
 
-function InputField({ label, icon: Icon, children }: InputFieldProps) {
+const InputField = memo(function InputField({ label, icon: Icon, children }: InputFieldProps) {
   return (
     <div>
       {label && <label className="block text-sm text-gray-500 mb-2">{label}</label>}
@@ -17,6 +17,6 @@ function InputField({ label, icon: Icon, children }: InputFieldProps) {
       </div>
     </div>
   )
-}
+})
 
 export default InputField

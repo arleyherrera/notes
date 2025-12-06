@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { LucideIcon } from 'lucide-react'
 
 interface ToggleProps {
@@ -7,7 +8,7 @@ interface ToggleProps {
   text: string
 }
 
-function Toggle({ active, onChange, icon: Icon, text }: ToggleProps) {
+const Toggle = memo(function Toggle({ active, onChange, icon: Icon, text }: ToggleProps) {
   return (
     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
       <div className="flex items-center gap-3">
@@ -22,6 +23,6 @@ function Toggle({ active, onChange, icon: Icon, text }: ToggleProps) {
       </button>
     </div>
   )
-}
+})
 
 export default Toggle

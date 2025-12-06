@@ -1,4 +1,6 @@
+import { useMemo, memo } from 'react'
 import NoteCard from './NoteCard'
+import { EmptyState } from '../common'
 import { Note } from '../../types'
 
 interface NoteGridProps {
@@ -6,19 +8,18 @@ interface NoteGridProps {
   onUpdate: (id: string, changes: Partial<Note>) => void
 }
 
-function NoteGrid({ notes, onUpdate }: NoteGridProps) {
-  const sortedNotes = [...notes].sort((a, b) => {
-    if (a.pinned && !b.pinned) return -1
-    if (!a.pinned && b.pinned) return 1
-    return 0
-  })
+const NoteGrid = memo(function NoteGrid({ notes, onUpdate }: NoteGridProps) {
+  // Memoize sorted notes to avoid sorting on every render
+  const sortedNotes = useMemo(() => {
+    return [...notes].sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1
+      if (!a.pinned && b.pinned) return 1
+      return 0
+    })
+  }, [notes])
 
   if (notes.length === 0) {
-    return (
-      <div className="text-center text-gray-500 py-10">
-        No notes yet. Create a new one!
-      </div>
-    )
+    return <EmptyState message="No notes yet. Create a new one!" />
   }
 
   return (
@@ -32,6 +33,6 @@ function NoteGrid({ notes, onUpdate }: NoteGridProps) {
       ))}
     </div>
   )
-}
+})
 
 export default NoteGrid

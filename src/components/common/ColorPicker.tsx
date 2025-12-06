@@ -1,8 +1,11 @@
+import { memo } from 'react'
+
 interface ColorPickerProps {
   onSelect: (color: string) => void
   vertical?: boolean
 }
 
+// Colors defined outside component - never recreated
 const colors = [
   { name: 'Orange', className: 'bg-orange-300' },
   { name: 'Yellow', className: 'bg-yellow-300' },
@@ -12,7 +15,7 @@ const colors = [
   { name: 'Violet', className: 'bg-violet-300' },
 ]
 
-function ColorPicker({ onSelect, vertical }: ColorPickerProps) {
+const ColorPicker = memo(function ColorPicker({ onSelect, vertical }: ColorPickerProps) {
   return (
     <div className={`${vertical ? 'flex flex-col' : 'flex'} gap-2 p-2 bg-white rounded-lg shadow-lg`}>
       {colors.map((color) => (
@@ -25,6 +28,6 @@ function ColorPicker({ onSelect, vertical }: ColorPickerProps) {
       ))}
     </div>
   )
-}
+})
 
 export default ColorPicker

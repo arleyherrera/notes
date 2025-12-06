@@ -1,48 +1,43 @@
-import { useState, MouseEvent } from 'react'
+import { useState, memo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Pencil } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { Note } from '../../types'
+import { formatDateShort } from '../../utils'
+import FavoriteButton from './FavoriteButton'
 
 interface NoteCardProps {
   note: Note
   onUpdate: (id: string, changes: Partial<Note>) => void
 }
 
-function NoteCard({ note, onUpdate }: NoteCardProps) {
+const NoteCard = memo(function NoteCard({ note, onUpdate }: NoteCardProps) {
   const [text, setText] = useState(note.content)
   const [hover, setHover] = useState(false)
 
-  const saveContent = () => {
+  const saveContent = useCallback(() => {
     if (text !== note.content) {
       onUpdate(note.id, { content: text })
     }
-  }
+  }, [text, note.content, note.id, onUpdate])
 
-  const toggleFavorite = (e: MouseEvent) => {
-    e.stopPropagation()
-    e.preventDefault()
+  const toggleFavorite = useCallback(() => {
     onUpdate(note.id, { favorite: !note.favorite })
-  }
+  }, [note.id, note.favorite, onUpdate])
 
-  const formatDate = (date: string) => {
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
-    return new Date(date).toLocaleDateString('en-US', options)
-  }
+  const handleMouseEnter = useCallback(() => setHover(true), [])
+  const handleMouseLeave = useCallback(() => setHover(false), [])
 
   return (
     <div
       className={`${note.color} rounded-2xl p-5 min-h-[180px] relative flex flex-col animate-slide-in`}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {note.favorite && (
-        <button
-          onClick={toggleFavorite}
-          className="absolute top-3 right-3 p-1"
-        >
-          <Star className="w-5 h-5 fill-gray-700 text-gray-700" />
-        </button>
-      )}
+      <FavoriteButton
+        isFavorite={note.favorite}
+        onToggle={toggleFavorite}
+        visible={note.favorite || hover}
+      />
 
       <textarea
         value={text}
@@ -55,7 +50,7 @@ function NoteCard({ note, onUpdate }: NoteCardProps) {
 
       <div className="flex justify-between items-end mt-2">
         <span className="text-sm text-gray-600">
-          {formatDate(note.updatedAt)}
+          {formatDateShort(note.updatedAt)}
         </span>
 
         {hover && (
@@ -67,17 +62,8 @@ function NoteCard({ note, onUpdate }: NoteCardProps) {
           </Link>
         )}
       </div>
-
-      {hover && !note.favorite && (
-        <button
-          onClick={toggleFavorite}
-          className="absolute top-3 right-3 p-1 opacity-50 hover:opacity-100"
-        >
-          <Star className="w-5 h-5 text-gray-600" />
-        </button>
-      )}
     </div>
   )
-}
+})
 
 export default NoteCard

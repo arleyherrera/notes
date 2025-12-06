@@ -1,45 +1,52 @@
-import { useState, useEffect, useCallback } from 'react'
-import { saveNotes, loadNotes } from '../utils/storage'
+import { useState, useCallback, useRef } from 'react'
+import { storageService } from '../services'
+import { createNote } from '../utils'
 import { Note } from '../types'
 
 function useNotes() {
-  const [notes, setNotes] = useState<Note[]>(() => loadNotes())
+  const [notes, setNotes] = useState<Note[]>(() => storageService.load())
+  const isFirstRender = useRef(true)
 
-  useEffect(() => {
-    saveNotes(notes)
-  }, [notes])
-
-  const addNote = (color: string): Note => {
-    const newNote: Note = {
-      id: Date.now().toString(),
-      content: '',
-      color: color,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      category: '',
-      tags: [],
-      pinned: false,
-      favorite: false
+  const saveToStorage = (updatedNotes: Note[]) => {
+    if (!isFirstRender.current) {
+      storageService.save(updatedNotes)
     }
-    setNotes(prev => [newNote, ...prev])
-    return newNote
+    isFirstRender.current = false
   }
 
+  const addNote = useCallback((color: string): Note => {
+    const newNote = createNote(color)
+    setNotes(prev => {
+      const updated = [newNote, ...prev]
+      saveToStorage(updated)
+      return updated
+    })
+    return newNote
+  }, [])
+
   const updateNote = useCallback((id: string, changes: Partial<Note>) => {
-    setNotes(prev => prev.map(note => {
-      if (note.id === id) {
-        return {
-          ...note,
-          ...changes,
-          updatedAt: new Date().toISOString()
+    setNotes(prev => {
+      const updated = prev.map(note => {
+        if (note.id === id) {
+          return {
+            ...note,
+            ...changes,
+            updatedAt: new Date().toISOString()
+          }
         }
-      }
-      return note
-    }))
+        return note
+      })
+      saveToStorage(updated)
+      return updated
+    })
   }, [])
 
   const deleteNote = useCallback((id: string) => {
-    setNotes(prev => prev.filter(note => note.id !== id))
+    setNotes(prev => {
+      const updated = prev.filter(note => note.id !== id)
+      saveToStorage(updated)
+      return updated
+    })
   }, [])
 
   const getNote = useCallback((id: string): Note | undefined => {
