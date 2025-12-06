@@ -3,32 +3,32 @@ import { Plus } from 'lucide-react'
 import { ColorPicker } from '../common'
 
 interface SidebarProps {
-  onNuevaNota: (color: string) => void
+  onNewNote: (color: string) => void
 }
 
-function Sidebar({ onNuevaNota }: SidebarProps) {
-  const [mostrarColores, setMostrarColores] = useState(false)
+function Sidebar({ onNewNote }: SidebarProps) {
+  const [showColors, setShowColors] = useState(false)
   const pickerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleClickFuera = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setMostrarColores(false)
+        setShowColors(false)
       }
     }
 
-    if (mostrarColores) {
-      document.addEventListener('mousedown', handleClickFuera)
+    if (showColors) {
+      document.addEventListener('mousedown', handleClickOutside)
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickFuera)
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [mostrarColores])
+  }, [showColors])
 
-  const crearNota = (color: string) => {
-    onNuevaNota(color)
-    setMostrarColores(false)
+  const createNote = (color: string) => {
+    onNewNote(color)
+    setShowColors(false)
   }
 
   return (
@@ -36,21 +36,21 @@ function Sidebar({ onNuevaNota }: SidebarProps) {
       {/* Logo */}
       <div className="text-sm font-semibold text-gray-700">Docket</div>
 
-      {/* Espaciador */}
+      {/* Spacer */}
       <div className="mt-16" />
 
-      {/* Boton agregar */}
+      {/* Add button */}
       <div className="relative" ref={pickerRef}>
         <button
-          onClick={() => setMostrarColores(!mostrarColores)}
+          onClick={() => setShowColors(!showColors)}
           className="w-12 h-12 bg-gray-800 text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors shadow-lg"
         >
           <Plus className="w-6 h-6" />
         </button>
 
-        {mostrarColores && (
+        {showColors && (
           <div className="absolute top-14 left-1/2 -translate-x-1/2 z-10 animate-fade-in">
-            <ColorPicker onSeleccionar={crearNota} vertical />
+            <ColorPicker onSelect={createNote} vertical />
           </div>
         )}
       </div>

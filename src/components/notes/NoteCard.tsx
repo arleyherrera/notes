@@ -1,43 +1,43 @@
 import { useState, MouseEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Star, Pencil } from 'lucide-react'
-import { Nota } from '../../types'
+import { Note } from '../../types'
 
 interface NoteCardProps {
-  nota: Nota
-  onActualizar: (id: string, cambios: Partial<Nota>) => void
+  note: Note
+  onUpdate: (id: string, changes: Partial<Note>) => void
 }
 
-function NoteCard({ nota, onActualizar }: NoteCardProps) {
-  const [texto, setTexto] = useState(nota.contenido)
+function NoteCard({ note, onUpdate }: NoteCardProps) {
+  const [text, setText] = useState(note.content)
   const [hover, setHover] = useState(false)
 
-  const guardarContenido = () => {
-    if (texto !== nota.contenido) {
-      onActualizar(nota.id, { contenido: texto })
+  const saveContent = () => {
+    if (text !== note.content) {
+      onUpdate(note.id, { content: text })
     }
   }
 
-  const toggleImportante = (e: MouseEvent) => {
+  const toggleFavorite = (e: MouseEvent) => {
     e.stopPropagation()
     e.preventDefault()
-    onActualizar(nota.id, { importante: !nota.importante })
+    onUpdate(note.id, { favorite: !note.favorite })
   }
 
-  const formatearFecha = (fecha: string) => {
-    const opciones: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
-    return new Date(fecha).toLocaleDateString('en-US', opciones)
+  const formatDate = (date: string) => {
+    const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' }
+    return new Date(date).toLocaleDateString('en-US', options)
   }
 
   return (
     <div
-      className={`${nota.color} rounded-2xl p-5 min-h-[180px] relative flex flex-col animate-slide-in`}
+      className={`${note.color} rounded-2xl p-5 min-h-[180px] relative flex flex-col animate-slide-in`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {nota.importante && (
+      {note.favorite && (
         <button
-          onClick={toggleImportante}
+          onClick={toggleFavorite}
           className="absolute top-3 right-3 p-1"
         >
           <Star className="w-5 h-5 fill-gray-700 text-gray-700" />
@@ -45,22 +45,22 @@ function NoteCard({ nota, onActualizar }: NoteCardProps) {
       )}
 
       <textarea
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-        onBlur={guardarContenido}
-        placeholder="Escribe tu nota..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={saveContent}
+        placeholder="Write your note..."
         className="w-full bg-transparent resize-none outline-none flex-1 text-gray-800 font-medium leading-relaxed"
         style={{ minHeight: '100px' }}
       />
 
       <div className="flex justify-between items-end mt-2">
         <span className="text-sm text-gray-600">
-          {formatearFecha(nota.updatedAt)}
+          {formatDate(note.updatedAt)}
         </span>
 
         {hover && (
           <Link
-            to={`/notes/${nota.id}`}
+            to={`/notes/${note.id}`}
             className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center hover:bg-white/80 transition-colors"
           >
             <Pencil className="w-4 h-4 text-gray-700" />
@@ -68,9 +68,9 @@ function NoteCard({ nota, onActualizar }: NoteCardProps) {
         )}
       </div>
 
-      {hover && !nota.importante && (
+      {hover && !note.favorite && (
         <button
-          onClick={toggleImportante}
+          onClick={toggleFavorite}
           className="absolute top-3 right-3 p-1 opacity-50 hover:opacity-100"
         >
           <Star className="w-5 h-5 text-gray-600" />

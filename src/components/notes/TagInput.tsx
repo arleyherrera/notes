@@ -9,7 +9,7 @@ interface TagInputProps {
 function TagInput({ tags, onChange }: TagInputProps) {
   const [input, setInput] = useState('')
 
-  const agregarTag = (e: KeyboardEvent<HTMLInputElement>) => {
+  const addTag = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim()) {
       e.preventDefault()
 
@@ -20,8 +20,8 @@ function TagInput({ tags, onChange }: TagInputProps) {
     }
   }
 
-  const eliminarTag = (tagAEliminar: string) => {
-    onChange(tags.filter(tag => tag !== tagAEliminar))
+  const removeTag = (tagToRemove: string) => {
+    onChange(tags.filter(tag => tag !== tagToRemove))
   }
 
   return (
@@ -32,7 +32,7 @@ function TagInput({ tags, onChange }: TagInputProps) {
           className="flex items-center gap-1 bg-gray-200 px-2 py-1 rounded-full text-sm"
         >
           {tag}
-          <button onClick={() => eliminarTag(tag)} className="hover:text-red-500">
+          <button onClick={() => removeTag(tag)} className="hover:text-red-500">
             <X className="w-3 h-3" />
           </button>
         </span>
@@ -41,8 +41,8 @@ function TagInput({ tags, onChange }: TagInputProps) {
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={agregarTag}
-        placeholder="Agregar tag..."
+        onKeyDown={addTag}
+        placeholder="Add tag..."
         className="flex-1 min-w-[100px] outline-none bg-transparent"
       />
     </div>

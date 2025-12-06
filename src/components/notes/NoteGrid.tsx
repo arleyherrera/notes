@@ -1,33 +1,33 @@
 import NoteCard from './NoteCard'
-import { Nota } from '../../types'
+import { Note } from '../../types'
 
 interface NoteGridProps {
-  notas: Nota[]
-  onActualizar: (id: string, cambios: Partial<Nota>) => void
+  notes: Note[]
+  onUpdate: (id: string, changes: Partial<Note>) => void
 }
 
-function NoteGrid({ notas, onActualizar }: NoteGridProps) {
-  const notasOrdenadas = [...notas].sort((a, b) => {
-    if (a.fijada && !b.fijada) return -1
-    if (!a.fijada && b.fijada) return 1
+function NoteGrid({ notes, onUpdate }: NoteGridProps) {
+  const sortedNotes = [...notes].sort((a, b) => {
+    if (a.pinned && !b.pinned) return -1
+    if (!a.pinned && b.pinned) return 1
     return 0
   })
 
-  if (notas.length === 0) {
+  if (notes.length === 0) {
     return (
       <div className="text-center text-gray-500 py-10">
-        No hay notas. ¡Crea una nueva!
+        No notes yet. Create a new one!
       </div>
     )
   }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-      {notasOrdenadas.map((nota) => (
+      {sortedNotes.map((note) => (
         <NoteCard
-          key={nota.id}
-          nota={nota}
-          onActualizar={onActualizar}
+          key={note.id}
+          note={note}
+          onUpdate={onUpdate}
         />
       ))}
     </div>

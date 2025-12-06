@@ -1,24 +1,24 @@
-import { Nota } from '../types'
+import { Note } from '../types'
 
-const STORAGE_KEY = 'mis-notas'
+const STORAGE_KEY = 'my-notes'
 
-export function guardarNotas(notas: Nota[]): void {
+export function saveNotes(notes: Note[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notas))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes))
   } catch (error) {
-    console.error('Error guardando notas:', error)
+    console.error('Error saving notes:', error)
   }
 }
 
-export function cargarNotas(): Nota[] {
+export function loadNotes(): Note[] {
   try {
-    const datos = localStorage.getItem(STORAGE_KEY)
-    if (datos) {
-      return JSON.parse(datos)
+    const data = localStorage.getItem(STORAGE_KEY)
+    if (data) {
+      return JSON.parse(data)
     }
     return []
   } catch (error) {
-    console.error('Error cargando notas:', error)
+    console.error('Error loading notes:', error)
     return []
   }
 }

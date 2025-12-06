@@ -1,57 +1,57 @@
 import { useState, useEffect, useCallback } from 'react'
-import { guardarNotas, cargarNotas } from '../utils/storage'
-import { Nota } from '../types'
+import { saveNotes, loadNotes } from '../utils/storage'
+import { Note } from '../types'
 
 function useNotes() {
-  const [notas, setNotas] = useState<Nota[]>(() => cargarNotas())
+  const [notes, setNotes] = useState<Note[]>(() => loadNotes())
 
   useEffect(() => {
-    guardarNotas(notas)
-  }, [notas])
+    saveNotes(notes)
+  }, [notes])
 
-  const agregarNota = (color: string): Nota => {
-    const nuevaNota: Nota = {
+  const addNote = (color: string): Note => {
+    const newNote: Note = {
       id: Date.now().toString(),
-      contenido: '',
+      content: '',
       color: color,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      categoria: '',
+      category: '',
       tags: [],
-      fijada: false,
-      importante: false
+      pinned: false,
+      favorite: false
     }
-    setNotas(prev => [nuevaNota, ...prev])
-    return nuevaNota
+    setNotes(prev => [newNote, ...prev])
+    return newNote
   }
 
-  const actualizarNota = useCallback((id: string, cambios: Partial<Nota>) => {
-    setNotas(prev => prev.map(nota => {
-      if (nota.id === id) {
+  const updateNote = useCallback((id: string, changes: Partial<Note>) => {
+    setNotes(prev => prev.map(note => {
+      if (note.id === id) {
         return {
-          ...nota,
-          ...cambios,
+          ...note,
+          ...changes,
           updatedAt: new Date().toISOString()
         }
       }
-      return nota
+      return note
     }))
   }, [])
 
-  const eliminarNota = useCallback((id: string) => {
-    setNotas(prev => prev.filter(nota => nota.id !== id))
+  const deleteNote = useCallback((id: string) => {
+    setNotes(prev => prev.filter(note => note.id !== id))
   }, [])
 
-  const obtenerNota = useCallback((id: string): Nota | undefined => {
-    return notas.find(nota => nota.id === id)
-  }, [notas])
+  const getNote = useCallback((id: string): Note | undefined => {
+    return notes.find(note => note.id === id)
+  }, [notes])
 
   return {
-    notas,
-    agregarNota,
-    actualizarNota,
-    eliminarNota,
-    obtenerNota
+    notes,
+    addNote,
+    updateNote,
+    deleteNote,
+    getNote
   }
 }
 

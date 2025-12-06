@@ -1,26 +1,26 @@
 interface ColorPickerProps {
-  onSeleccionar: (color: string) => void
+  onSelect: (color: string) => void
   vertical?: boolean
 }
 
-const colores = [
-  { nombre: 'Naranja', clase: 'bg-orange-300' },
-  { nombre: 'Amarillo', clase: 'bg-yellow-300' },
-  { nombre: 'Lima', clase: 'bg-lime-300' },
-  { nombre: 'Rosa', clase: 'bg-pink-300' },
-  { nombre: 'Cyan', clase: 'bg-cyan-300' },
-  { nombre: 'Violeta', clase: 'bg-violet-300' },
+const colors = [
+  { name: 'Orange', className: 'bg-orange-300' },
+  { name: 'Yellow', className: 'bg-yellow-300' },
+  { name: 'Lime', className: 'bg-lime-300' },
+  { name: 'Pink', className: 'bg-pink-300' },
+  { name: 'Cyan', className: 'bg-cyan-300' },
+  { name: 'Violet', className: 'bg-violet-300' },
 ]
 
-function ColorPicker({ onSeleccionar, vertical }: ColorPickerProps) {
+function ColorPicker({ onSelect, vertical }: ColorPickerProps) {
   return (
     <div className={`${vertical ? 'flex flex-col' : 'flex'} gap-2 p-2 bg-white rounded-lg shadow-lg`}>
-      {colores.map((color) => (
+      {colors.map((color) => (
         <button
-          key={color.nombre}
-          onClick={() => onSeleccionar(color.clase)}
-          className={`w-8 h-8 rounded-full ${color.clase} hover:scale-110 transition-transform`}
-          title={color.nombre}
+          key={color.name}
+          onClick={() => onSelect(color.className)}
+          className={`w-8 h-8 rounded-full ${color.className} hover:scale-110 transition-transform`}
+          title={color.name}
         />
       ))}
     </div>

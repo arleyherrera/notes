@@ -1,12 +1,12 @@
-export interface Nota {
+export interface Note {
   id: string
-  contenido: string
+  content: string
   color: string
   createdAt: string
   updatedAt: string
-  categoria: string
+  category: string
   tags: string[]
-  fijada: boolean
-  importante: boolean
-  archivada?: boolean
+  pinned: boolean
+  favorite: boolean
+  archived?: boolean
 }
